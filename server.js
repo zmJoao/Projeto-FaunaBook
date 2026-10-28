@@ -1,30 +1,25 @@
-//requere o express
 const express = require('express')
-//instancia do express
 const api = express()
-//requerer o cors
 const cors = require('cors')
-//requerer a conexao
 const conn = require('./db/conn')
-//requerer os Models
-const User = require('./models/Users')
-const Product = require('./models/Products')
-//requerer a rotas
+require('./models/associations')
 const userRoutes = require('./routes/userRotues')
-const productRoutes = require('./routes/productRoutes')
-const cartRoutes = require('./routes/cartRoutes')
+const postRoutes = require('./routes/postRoutes')
 
-//Configurando JSON response
-api.use(express.json())
+api.use(express.json({ limit: '10mb' }))
+api.use(cors({ credentials: true, origin: process.env.CLIENT_ORIGIN || 'http://localhost:3030' }))
 
-//salve cors
-api.use(cors({ credentials: true, origin: 'http://localhost:3030' }))
+api.use('/users', userRoutes)
+api.use('/posts', postRoutes)
 
-api.use('/users',userRoutes)
-api.use('/products',productRoutes)
-api.use('/cart',cartRoutes)
+const port = process.env.PORT || 3030
 
-//start api
-conn.sync()
-    .then(() => { api.listen(3030) })
-    .catch(error => { console.info(error) })
+conn.authenticate()
+    .then(() => conn.sync({ alter: true }))
+    .then(() => {
+        api.listen(port, () => console.info(`FaunaBook API listening on port ${port}`))
+    })
+    .catch(error => {
+        console.error('Não foi possível iniciar a API:', error)
+        process.exitCode = 1
+    })

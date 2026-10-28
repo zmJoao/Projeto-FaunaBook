@@ -6,28 +6,32 @@ const conn = require('../db/conn')
 //definier o model user
 const User = conn.define('users',{
     name:{
-        type: DataTypes.STRING,
-        required: true
+        type: DataTypes.STRING(100),
+        allowNull: false
     },
     email:{
         type: DataTypes.STRING,
-        required: true
+        allowNull: false,
+        unique: true,
+        validate: { isEmail: true }
     },
     password:{
         type: DataTypes.STRING,
-        required: true
+        allowNull: false
     },
     image:{
         type: DataTypes.STRING,
     },
     phone:{
         type: DataTypes.STRING,
-        required: true
     },
     tipo:{
-        type: DataTypes.STRING,
-        required: true
-}
+        type: DataTypes.ENUM('admin', 'cliente'),
+        allowNull: false,
+        defaultValue: 'cliente'
+    }
+}, {
+    tableName: 'users'
 })
 
 module.exports = User

@@ -7,14 +7,8 @@ const getToken = require('./get-token.js')
 //criar metodo para verificar o token
 const checkToken = (req, res, next)=>{
     //1-caso o cabeçalho esteja vazio
-    if(!req.headers.authorization){
-        return res.status(401).json({message: 'Acesso negado'})
-    }
-
-    //recuperar o token
     const token = getToken(req)
 
-    //2-caso o token seja inexistente
     if(!token){
         return res.status(401).json({message: 'Acesso negado'})
     }

@@ -3,7 +3,7 @@ require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
 //criar o metodo para gerar o token
-const createUserToken = async(user, req, res)=>{
+const createUserToken = (user, req, res)=>{
     const token = jwt.sign({
         name: user.name,
         id: user.id,

@@ -1,22 +1,17 @@
 //requerer o siquelize
 const Sequelize = require('sequelize')
+require('dotenv').config()
 
 //parametros de conexão
 const conn = new Sequelize(
-    'FaunaBook',
-    'root',
-    '',{
-        host:'localhost',
-        dialect:'mysql',
-        port:3306
+    process.env.DB_NAME || 'FaunaBook',
+    process.env.DB_USER || 'root',
+    process.env.DB_PASSWORD || '', {
+        host: process.env.DB_HOST || 'localhost',
+        dialect: 'mysql',
+        port: Number(process.env.DB_PORT) || 3306,
+        logging: false
     }
 )
-
-try {
-    conn.authenticate()
-    console.info('Banco de Dados conectado com sucesso!')
-} catch (error) {
-    console.info(`Não foi possivel conectar ao banco:,${error}`)
-}
 
 module.exports = conn
